@@ -1,10 +1,10 @@
 export async function onRequest(context) {
   // API'lardan JSON çekiyoruz
-  const domainRes = await fetch("https://www.voleapi.buzz/domainlink/jsondomain.php");
+  const domainRes = await fetch("https://matchkey.sbs/domainlink/jsondomain.php");
   const domainData = await domainRes.json();
   const güncelDomain = domainData['taraftarium'] || "";
 
-  const ayarRes = await fetch("https://apibaglan.site/api/verirepo.php");
+  const ayarRes = await fetch("https://panel.matchkey.sbs/api/verirepo.php");
   const ayarData = await ayarRes.json();
 
   const pageskin = ayarData?.ayar?.ayar_reklam3 || "";
