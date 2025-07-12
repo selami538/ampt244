@@ -1,20 +1,24 @@
-export async function onRequest(context) {
-  const { request } = context;
-  const parsedUrl = new URL(request.url);
-  let path = parsedUrl.pathname.replace("/stream", "");
-  let search = parsedUrl.search;
-  let last = path + search;
+export async function onRequest({ request }) {
+  const url = new URL(request.url)
 
-  let response = await fetch("https://esraerol2.volestream.lat/" + last);
+  if (url.pathname.startsWith('/stream')) {
+    // proxy mantığı
+    let path = url.pathname.replace("/stream", "")
+    let search = url.search
+    let last = path + search
 
-  const headers = new Headers(response.headers);
-  headers.delete("set-cookie");
-  headers.set("Access-Control-Allow-Origin", "*");
-  headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  headers.set("Access-Control-Allow-Headers", "Content-Type");
+    let response = await fetch("https://esraerol2.volestream.lat/" + last)
 
-  return new Response(response.body, {
-    status: response.status,
-    headers,
-  });
+    const headers = new Headers(response.headers)
+    headers.delete("set-cookie")
+    headers.set("Access-Control-Allow-Origin", "*")
+
+    return new Response(response.body, {
+      status: response.status,
+      headers
+    })
+  }
+
+  // diğer tüm yollar için 404 atma (ya da fallback)
+  return new Response("Not found", { status: 404 })
 }
